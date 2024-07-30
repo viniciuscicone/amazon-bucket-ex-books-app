@@ -30,11 +30,11 @@ class ControllerException extends RuntimeException {
     @ExceptionHandler({ HttpMessageNotReadableException.class })
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ExceptionRespon> resolveException(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ExceptionResponse> resolveException(HttpMessageNotReadableException ex) {
         String message = "Por favor insira um Request Body com JSON valido";
         List<String> messages = new ArrayList<>(1);
         messages.add(message);
-        return new ResponseEntity<>(new ExceptionRespon(messages, HttpStatus.BAD_REQUEST.getReasonPhrase(),
+        return new ResponseEntity<>(new ExceptionResponse(messages, HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
 

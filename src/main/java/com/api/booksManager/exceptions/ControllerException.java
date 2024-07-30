@@ -38,5 +38,4 @@ class ControllerException extends RuntimeException {
                 HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
 
-
 }

@@ -1,6 +1,10 @@
 # booksManager
 booksManager
 
+# Tecnologies
+
+> <br/><img src="assets\AWS.png" alt="drawing" width="100"/>
+
 # Getting Started
 
 ### Reference Documentation

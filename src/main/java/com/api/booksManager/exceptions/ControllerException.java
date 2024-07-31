@@ -22,7 +22,7 @@ class ControllerException extends RuntimeException {
         MessageReturn generic = new MessageReturn(
                 HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 e.getFieldError().getDefaultMessage(),
-                "Um problema com este campo: " + e.getFieldError().getField());
+                "Um problema com este campo:  " + e.getFieldError().getField());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(generic);
     }

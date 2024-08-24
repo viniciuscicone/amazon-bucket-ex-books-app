@@ -27,7 +27,7 @@ class ControllerException extends RuntimeException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(generic);
     }
 
-    @ExceptionHandler({ HttpMessageNotReadableException.class })
+    @ExceptionHandler({HttpMessageNotReadableException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ExceptionResponse> resolveException(HttpMessageNotReadableException ex) {

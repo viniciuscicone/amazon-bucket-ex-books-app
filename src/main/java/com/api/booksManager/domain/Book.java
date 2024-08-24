@@ -1,18 +1,24 @@
 package com.api.booksManager.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
-@Table(name = "Book")
-@Entity
+@Table(name = "book")
+@Entity(name = "book")
+@EqualsAndHashCode(of = "id")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class Book {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     String name;
+    String autor;
+
 }

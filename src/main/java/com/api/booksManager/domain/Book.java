@@ -5,8 +5,8 @@ import lombok.*;
 
 import java.util.UUID;
 
-@Table(name = "book")
-@Entity(name = "book")
+@Table(name = "bookstable")
+@Entity(name = "bookstable")
 @EqualsAndHashCode(of = "id")
 @Getter
 @Setter
@@ -18,7 +18,9 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
-    String name;
-    String autor;
-
+    private String name;
+    private String autor;
+    private String sinopse;
+    private String nota;
+    private String img_url;
 }

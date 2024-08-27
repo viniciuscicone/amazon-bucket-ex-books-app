@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS bookstable (
     nameBook VARCHAR(200) NOT NULL,
     autor VARCHAR(200) NOT NULL,
     sinopse mediumtext,
-    img_url VARCHAR(255)
+    img_url VARCHAR(255),
     nota INT NOT NULL,
     CONSTRAINT chk_nota CHECK (nota BETWEEN 1 AND 5)
 );

@@ -1,5 +1,4 @@
-# booksManager
-booksManager
+# bookstoreapp
 
 # Tecnologies
 

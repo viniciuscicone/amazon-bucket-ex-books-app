@@ -50,6 +50,17 @@ class ControllerException extends RuntimeException {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(generic);
     }
+    @ResponseBody
+    @ExceptionHandler(Error.class)
+    public ResponseEntity handleException(Error e) {
+
+        MessageReturn generic = new MessageReturn(
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getLocalizedMessage(),
+                "Um problema :  " + e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(generic);
+    }
 
 }
 

@@ -20,14 +20,11 @@ import java.util.UUID;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
-    private String nameBook;
+    private String id;
+    private String name_book;
     private String autor;
     private String sinopse;
     private String img_url;
     private int nota;
 
-    public Book(BookDTO book) {
-    }
 }

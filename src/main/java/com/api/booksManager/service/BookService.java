@@ -2,22 +2,26 @@ package com.api.booksManager.service;
 
 import com.api.booksManager.domain.Book;
 import com.api.booksManager.domain.BookDTO;
+import com.api.booksManager.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
 
 
 @Service
@@ -28,6 +32,9 @@ public class BookService {
 
     @Autowired
     private S3Client s3Client;
+
+    @Autowired
+    private BookRepository bookrepository;
 
     public String uploadImage(MultipartFile multipartFile) {
 
@@ -55,19 +62,48 @@ public class BookService {
         }
     }
 
+    public Object deleteBook(String id) {
+
+        try {
+
+            Book book = bookrepository.findById(id).orElse(null);
+
+            if (book == null) {
+                throw new Error("Livro nao encontrado !");
+            }
+            bookrepository.deleteById(id);
+
+            String key = new URL(book.getImg_url()).getPath().substring(1);
+            // Remove o '/' inicial
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+
+            return "Livro : " + id + ", Apagado";
+
+        } catch (Exception e) {
+            return e;
+        }
+    }
+
+    @Transactional
     public Book uploadBookService(BookDTO book, MultipartFile imagem) {
 
-        /*String url = uploadImage(imagem);*/
+        String url = uploadImage(imagem);
 
         Book newbook = Book.builder()
-                .id(UUID.randomUUID())
-                .nameBook(book.getNameBook())
+                .id(UUID.randomUUID().toString())
+                .name_book(book.getNameBook())
                 .autor(book.getAutor())
                 .sinopse(book.getSinopse())
-                .img_url("url")
+                .img_url(url)
                 .nota(book.getNota()).build();
 
-        return newbook;
+
+        return bookrepository.save(newbook);
     }
 
 

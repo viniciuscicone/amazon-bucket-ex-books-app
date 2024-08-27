@@ -1,5 +1,6 @@
 package com.api.booksManager.exceptions;
 
+import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -38,4 +39,17 @@ class ControllerException extends RuntimeException {
                 HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseBody
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity handleException(UnexpectedTypeException e) {
+
+        MessageReturn generic = new MessageReturn(
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getLocalizedMessage(),
+                "Um problema :  " + e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(generic);
+    }
+
 }
+

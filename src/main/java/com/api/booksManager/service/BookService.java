@@ -1,5 +1,7 @@
 package com.api.booksManager.service;
 
+import com.api.booksManager.domain.Book;
+import com.api.booksManager.domain.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class BookService {
 
         String imgName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
 
-        try{
+        try {
 
             File file = this.convertMultipartTofile(multipartFile);
 
@@ -49,9 +51,25 @@ public class BookService {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            return e.getMessage();
         }
     }
+
+    public Book uploadBookService(BookDTO book, MultipartFile imagem) {
+
+        /*String url = uploadImage(imagem);*/
+
+        Book newbook = Book.builder()
+                .id(UUID.randomUUID())
+                .nameBook(book.getNameBook())
+                .autor(book.getAutor())
+                .sinopse(book.getSinopse())
+                .img_url("url")
+                .nota(book.getNota()).build();
+
+        return newbook;
+    }
+
 
     private File convertMultipartTofile(MultipartFile multipartFile) throws IOException {
 

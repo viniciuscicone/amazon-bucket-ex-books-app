@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+
+@Builder
 @Table(name = "bookstable")
 @Entity(name = "bookstable")
 @EqualsAndHashCode(of = "id")

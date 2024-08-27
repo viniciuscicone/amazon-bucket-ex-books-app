@@ -25,13 +25,16 @@ public class BooksControlers {
     @Autowired
     private BookRepository bookrepository;
 
+
     @GetMapping
-    public ResponseEntity getTest( @RequestPart("dados") BookDTO livroDTO,
-                                   @RequestPart("imagem") MultipartFile imagem) {
+    public ResponseEntity getTest(@Valid @RequestPart("dados") BookDTO livroDTO,
+                                  @Valid @RequestPart("imagem") MultipartFile imagem) {
 
-        String url = bookService.uploadImage(imagem);
+        Book bookrepo = bookService.uploadBookService(livroDTO, imagem);
 
-        return ResponseEntity.ok(livroDTO + " : mensagem apos o body bd: " + url );
+        /*String url = bookService.uploadImage(imagem);*/
+
+        return ResponseEntity.ok(bookrepo);
     }
 
 

@@ -3,13 +3,14 @@ package com.api.booksManager.service;
 import com.api.booksManager.domain.Book;
 import com.api.booksManager.domain.BookDTO;
 import com.api.booksManager.repository.BookRepository;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.services.s3.S3Client;
 
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
@@ -38,17 +39,17 @@ public class BookService {
 
     public String uploadImage(MultipartFile multipartFile) {
 
-        String imgName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+        String imgName = UUID.randomUUID() +  "imagem_bucket.jpeg";
 
         try {
 
-            File file = this.convertMultipartTofile(multipartFile);
+            File file = this.convertAndResizeImage(multipartFile);
 
             PutObjectRequest putOb = PutObjectRequest.builder()
                     .bucket(bucket)
                     .key(imgName)
                     .build();
-            s3Client.putObject(putOb, RequestBody.fromByteBuffer(ByteBuffer.wrap(multipartFile.getBytes())));
+            s3Client.putObject(putOb, RequestBody.fromFile(file));
             GetUrlRequest request = GetUrlRequest.builder()
                     .bucket(bucket)
                     .key(imgName)
@@ -62,14 +63,14 @@ public class BookService {
         }
     }
 
-    public Object deleteBook(String id) {
+    public String deleteBook(String id) {
 
         try {
 
             Book book = bookrepository.findById(id).orElse(null);
 
             if (book == null) {
-                throw new Error("Livro nao encontrado !");
+                throw new RuntimeException("Livro nao encontrado !");
             }
             bookrepository.deleteById(id);
 
@@ -85,12 +86,17 @@ public class BookService {
             return "Livro : " + id + ", Apagado";
 
         } catch (Exception e) {
-            return e;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
     @Transactional
     public Book uploadBookService(BookDTO book, MultipartFile imagem) {
+
+        if (imagem == null || imagem.isEmpty()) {
+            throw new RuntimeException("Imagem nao anexada");
+        }
+        validateImageFile(imagem);
 
         String url = uploadImage(imagem);
 
@@ -102,18 +108,30 @@ public class BookService {
                 .img_url(url)
                 .nota(book.getNota()).build();
 
-
         return bookrepository.save(newbook);
     }
 
 
-    private File convertMultipartTofile(MultipartFile multipartFile) throws IOException {
+    private File convertAndResizeImage(MultipartFile multipartFile) throws IOException {
 
-        File convertFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(convertFile);
-        fos.write(multipartFile.getBytes());
-        fos.close();
-        return convertFile;
+        try {
+
+        File tempFile = File.createTempFile("temp", ".jpeg");
+        Thumbnails.of(multipartFile.getInputStream())
+                .forceSize(1630, 1473) // Defina o tamanho desejado para a capa do livro
+                .outputFormat("jpeg")
+                .toFile(tempFile);
+
+        return tempFile;
+
+        } catch (Exception e) {
+           throw new RuntimeException(e.getMessage());
+        }
     }
-
+    private void validateImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new RuntimeException("Arquivo não é uma imagem válida");
+        }
+    }
 }

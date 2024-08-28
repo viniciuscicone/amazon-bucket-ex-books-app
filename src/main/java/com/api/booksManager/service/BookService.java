@@ -3,13 +3,13 @@ package com.api.booksManager.service;
 import com.api.booksManager.domain.Book;
 import com.api.booksManager.domain.BookDTO;
 import com.api.booksManager.repository.BookRepository;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.coobird.thumbnailator.Thumbnails;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -17,10 +17,8 @@ import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 
@@ -111,7 +109,6 @@ public class BookService {
         return bookrepository.save(newbook);
     }
 
-
     private File convertAndResizeImage(MultipartFile multipartFile) throws IOException {
 
         try {
@@ -131,7 +128,7 @@ public class BookService {
     private void validateImageFile(MultipartFile file) {
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
-            throw new RuntimeException("Arquivo não é uma imagem válida");
+            throw new RuntimeException("Arquivo não é uma imagem válida, imagens permitidas JPG, JPEG, PNG");
         }
     }
 }

@@ -3,7 +3,6 @@ package com.api.booksManager.controller;
 import com.api.booksManager.domain.Book;
 import com.api.booksManager.domain.BookDTO;
 import com.api.booksManager.domain.UrlBookDTO;
-import com.api.booksManager.exceptions.MessageReturn;
 import com.api.booksManager.repository.BookRepository;
 import com.api.booksManager.service.BookService;
 import jakarta.validation.Valid;
@@ -11,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
@@ -29,6 +25,7 @@ public class BooksControlers {
     @Autowired
     private BookRepository bookrepository;
 
+    
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
 

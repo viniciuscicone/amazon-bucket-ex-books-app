@@ -1,4 +1,4 @@
-# bookstoreapp
+# plaza books app
 
 # Tecnologies
 
